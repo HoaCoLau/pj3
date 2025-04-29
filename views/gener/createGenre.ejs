@@ -12,7 +12,12 @@
     <form action="/genres" method="POST">
       <div class="mb-3">
         <label for="name" class="form-label">Genre Name</label>
-        <input type="text" class="form-control" id="name" name="name" >
+        <input type="text" class="form-control <% if (errorObj.name) { %>is-invalid<% } %>" id="name" name="name" >
+        <% if (errorObj.name) { %>
+          <div class="invalid-feedback">
+            <%= errorObj.name %>
+          </div>
+        <% } %>
       </div>
       <button type="submit" class="btn btn-primary">Add Genre</button>
       <a href="/genres" class="btn btn-secondary">Cancel</a>

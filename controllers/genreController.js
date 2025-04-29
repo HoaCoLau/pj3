@@ -1,4 +1,6 @@
 const Genre = require('../models/Genre');
+const { createGenreSchema, updateGenreSchema } = require('../validation/genreValidation');
+
 
 exports.getAllGenres = async (req, res) => {
   try {
@@ -23,9 +25,23 @@ exports.getGenreById = async (req, res) => {
   }
 };
 exports.renderCreateGenreForm = (req, res) => {
-    res.render('gener/createGenre');
+    res.render('gener/createGenre', {oldInput: {}, errorObj: {}});
   };
 exports.createGenre = async (req, res) => {
+  const { error } = createGenreSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errorObj = {};
+    if (error.details && error.details.length) {
+      error.details.forEach(err => {
+        errorObj[err.path[0]] = err.message;
+      });
+    }
+    return res.render('gener/createGenre', {
+      errorObj,
+      oldInput: req.body,
+    });
+  }
   try {
     const { name } = req.body;
     const newGenre = await Genre.create({ name });
@@ -39,7 +55,8 @@ exports.renderUpdateGenreForm = async (req, res) => {
     try {
       const genre = await Genre.findByPk(req.params.id);
       if (genre) {
-        res.render('gener/updateGenre', { genre });
+        const oldInput = genre.dataValues;
+        res.render('gener/updateGenre', { genre , oldInput, errorObj: {} });
       } else {
         res.status(404).send('Genre not found');
       }
@@ -48,6 +65,22 @@ exports.renderUpdateGenreForm = async (req, res) => {
     }
   };
 exports.updateGenre = async (req, res) => {
+  const { error } = updateGenreSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const genre = await Genre.findByPk(req.params.id);
+    const errorObj = {};
+    const oldInput = genre.dataValues;
+    if (error.details && error.details.length) {
+      error.details.forEach(err => {
+        errorObj[err.path[0]] = err.message;
+      });
+    }
+    return res.render('gener/updateGenre', {
+      errorObj,
+      oldInput,
+    });
+  }
   try {
     const { name } = req.body;
     const genre = await Genre.findByPk(req.params.id);
