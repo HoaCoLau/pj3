@@ -1,17 +1,20 @@
 const express = require('express');
 require('dotenv').config();
 const app = express();
+const cookieParser = require('cookie-parser');
+const setUser = require('./middleware/setUser');
+
 const methodOverride = require('method-override');
 const authRoutes = require('./routes/authRoutes'); 
 const bookRoutes = require('./routes/bookRoutes'); 
 const userRoutes = require('./routes/userRoutes');
 const genreRoutes = require('./routes/genreRoutes');
-const cookieParser = require('cookie-parser');
 
 
 
 // Middleware
 app.use(cookieParser());
+app.use(setUser);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(methodOverride('_method'));

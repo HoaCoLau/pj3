@@ -21,12 +21,17 @@
       </div>
       <div class="mb-3">
         <label for="genre_id" class="form-label">Genre</label>
-        <select class="form-select" id="genre_id" name="genre_id" >
+        <select class="form-select <% if (errorObj.genre_id) { %>is-invalid<% } %>" id="genre_id" name="genre_id" >
           <option value="" disabled selected>Select a genre</option>
           <% genres.forEach(genre => { %>
             <option value="<%= genre.id %>"><%= genre.name %></option>
           <% }) %>
         </select>
+        <% if (errorObj.genre_id) { %>
+          <div class="invalid-feedback">
+            <%= errorObj.genre_id %>
+          </div>
+        <% } %>
       </div>
       <div class="mb-3">
         <label for="author" class="form-label">Author</label>

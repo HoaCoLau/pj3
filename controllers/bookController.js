@@ -77,7 +77,9 @@ exports.updateBook = async (req, res) => {
 
   if (error) {
     const genres = await Genre.findAll();
+    const book = await Book.findByPk(req.params.id);
     const errorObj = {};
+    const oldInput = book.dataValues;
     if (error.details && error.details.length) {
       error.details.forEach(err => {
         errorObj[err.path[0]] = err.message;
@@ -86,7 +88,7 @@ exports.updateBook = async (req, res) => {
     return res.render('book/updateBook', {
       genres,
       errorObj,
-      oldInput: req.body,
+      oldInput,
     });
   }
   try {

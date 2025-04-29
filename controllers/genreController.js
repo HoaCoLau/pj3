@@ -3,7 +3,7 @@ const Genre = require('../models/Genre');
 exports.getAllGenres = async (req, res) => {
   try {
     const genres = await Genre.findAll();
-    res.render('genres', { genres });
+    res.render('gener/genres', { genres });
   } catch (err) {
     res.status(500).send('Error retrieving genres');
   }
@@ -23,7 +23,7 @@ exports.getGenreById = async (req, res) => {
   }
 };
 exports.renderCreateGenreForm = (req, res) => {
-    res.render('createGenre');
+    res.render('gener/createGenre');
   };
 exports.createGenre = async (req, res) => {
   try {
@@ -39,7 +39,7 @@ exports.renderUpdateGenreForm = async (req, res) => {
     try {
       const genre = await Genre.findByPk(req.params.id);
       if (genre) {
-        res.render('updateGenre', { genre });
+        res.render('gener/updateGenre', { genre });
       } else {
         res.status(404).send('Genre not found');
       }
