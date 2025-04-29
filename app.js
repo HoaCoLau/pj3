@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const logger = require('./logger');
 const app = express();
 const cookieParser = require('cookie-parser');
 const setUser = require('./middleware/setUser');
@@ -10,13 +11,17 @@ const bookRoutes = require('./routes/bookRoutes');
 const userRoutes = require('./routes/userRoutes');
 const genreRoutes = require('./routes/genreRoutes');
 
-
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 // Middleware
 app.use(cookieParser());
 app.use(setUser);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.static('public'));
 app.use(methodOverride('_method'));
 
 

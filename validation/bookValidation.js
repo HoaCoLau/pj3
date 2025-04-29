@@ -22,6 +22,11 @@ const createBookSchema = Joi.object({
   genre_id: Joi.number().integer().required().messages({
     'number.base': 'Genre ID must be a number',
     'any.required': 'Genre is required'
+  }),
+  decription: Joi.string().min(30).required().messages({
+    'string.base': 'Decription must be a string',
+    'string.empty': 'Decription is required',
+    'string.min': 'Decription must be at least 30 characters long'
   })
 });
 
@@ -47,6 +52,11 @@ const updateBookSchema = Joi.object({
       genre_id: Joi.number().integer().required().messages({
         'number.base': 'Genre ID must be a number',
         'any.required': 'Genre is required'
+      }),
+      decription: Joi.string().min(30).required().messages({
+        'string.base': 'Decription must be a string',
+        'string.empty': 'Decription is required',
+        'string.min': 'Decription must be at least 30 characters long'
       })
 });
 

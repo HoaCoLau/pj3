@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { createUserSchema } = require('../validation/userValidation');
+const logger = require('../logger');
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -9,6 +10,7 @@ exports.login = async (req, res) => {
   if (user) {
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: '5h' });
     res.cookie('token', token, { httpOnly: true });
+    logger.info('User logined in', { user: user.email });
     res.redirect('/');
   } else {
     res.send('Sai tài khoản hoặc mật khẩu');
@@ -48,5 +50,6 @@ exports.logout = (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
   });
+  logger.info('User logged out');
   res.redirect('/login');
 };

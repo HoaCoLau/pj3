@@ -5,12 +5,29 @@ const { createBookSchema, updateBookSchema } = require('../validation/bookValida
 
 
 exports.getAllBooks = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+  const genres = await Genre.findAll();
+
   try {
-    const books = await Book.findAll();
-    const genres = await Genre.findAll();
-    res.render('book/books', { books, genres });
+    const { count, rows: books } = await Book.findAndCountAll({
+      limit,
+      offset,
+      order: [['id', 'ASC']],
+    });
+
+    const totalPages = Math.ceil(count / limit);
+
+    res.render('book/books', {
+      books,
+      genres,
+      currentPage: page,
+      totalPages,
+    });
   } catch (err) {
-    console.error('Error:', err);
+    console.error('Error fetching books:', err);
+    res.status(500).send('Error');
   }
 };
 exports.CreateBookForm = async (req, res) => {
@@ -29,20 +46,34 @@ exports.createBook = async (req, res) => {
         errorObj[err.path[0]] = err.message;
       });
     }
+
     return res.render('book/createBook', {
       genres,
       errorObj,
       oldInput: req.body,
     });
   }
+
   try {
-    const { title, author, price, genre_id } = req.body;
-    await Book.create({ title, author, price, genre_id });
+    const { title, author, price, genre_id, decription } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    await Book.create({
+      title,
+      author,
+      price,
+      genre_id,
+      image,
+      decription
+    });
+
     res.redirect('/books');
   } catch (err) {
+    console.error(err);
     res.status(500).send('Error creating book');
   }
 };
+
 
 exports.getBookById = async (req, res) => {
   try {
@@ -92,10 +123,11 @@ exports.updateBook = async (req, res) => {
     });
   }
   try {
-    const { title, author, price, genre_id } = req.body;
+    const { title, author, price, genre_id, decription } = req.body;
     const book = await Book.findByPk(req.params.id);
+    const image = req.file ? req.file.filename : book.image;
     if (book) {
-      await book.update({ title, author, price, genre_id });
+      await book.update({ title, author, price, genre_id, image, decription });
       res.redirect('/books');
     } else {
       res.status(404).send('Book not found');

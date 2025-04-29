@@ -6,6 +6,7 @@
             <tr>
               <th>ID</th>
               <th>Title</th>
+              <th>Image</th>
               <th>Author</th>
               <th>Price</th>
               <th>Genre</th>
@@ -17,6 +18,13 @@
               <tr>
                 <td><%= book.id %></td>
                 <td><%= book.title %></td>
+                <td>
+                  <% if (book.image) { %>
+                    <img src="/uploads/<%= book.image %>" alt="Book Image" width="80">
+                  <% } else { %>
+                    <span>Không có ảnh</span>
+                  <% } %>
+                </td>
                 <td><%= book.author %></td>
                 <td><%= book.price %>đ</td>
                 <td>
@@ -37,6 +45,15 @@
             <% }) %>
           </tbody>
     </table>
+    <nav>
+      <ul class="pagination justify-content-center">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
     <a href="/books/new" class="btn btn-primary">Add New Book</a>
   </div>
   <%- include('../layout/footer') %>
