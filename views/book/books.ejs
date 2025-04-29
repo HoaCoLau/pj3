@@ -1,0 +1,42 @@
+<%- include('../layout/header') %>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Books List</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Price</th>
+              <th>Genre</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% books.forEach(book => { %>
+              <tr>
+                <td><%= book.id %></td>
+                <td><%= book.title %></td>
+                <td><%= book.author %></td>
+                <td><%= book.price %>đ</td>
+                <td>
+                    <% genres.forEach(genre => { %>
+                        <% if (book.genre_id === genre.id) { %>
+                            <%= genre.name %>
+                        <% } %>
+                    <% }) %>              
+                </td>
+                <td>
+                  <a href="/books/<%= book.id %>" class="btn btn-info btn-sm">View</a>
+                  <a href="/books/edit/<%= book.id %>" class="btn btn-warning btn-sm">Edit</a>
+                  <form action="/books/<%= book.id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+    </table>
+    <a href="/books/new" class="btn btn-primary">Add New Book</a>
+  </div>
+  <%- include('../layout/footer') %>

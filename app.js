@@ -6,9 +6,12 @@ const authRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes'); 
 const userRoutes = require('./routes/userRoutes');
 const genreRoutes = require('./routes/genreRoutes');
+const cookieParser = require('cookie-parser');
+
 
 
 // Middleware
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(methodOverride('_method'));

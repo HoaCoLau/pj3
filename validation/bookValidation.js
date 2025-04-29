@@ -1,0 +1,36 @@
+const Joi = require('joi');
+
+const createBookSchema = Joi.object({
+  title: Joi.string().min(3).required().messages({
+    'string.base': 'Title must be a string',
+    'string.empty': 'Title is required',
+    'string.min': 'Title must be at least 3 characters long'
+  }),
+  
+  author: Joi.string().min(3).required().messages({
+    'string.base': 'Author must be a string',
+    'string.empty': 'Author is required',
+    'string.min': 'Author must be at least 3 characters long'
+  }),
+
+  price: Joi.number().greater(0).required().messages({
+    'number.base': 'Price must be a number',
+    'number.greater': 'Price must be a positive number',
+    'any.required': 'Price is required'
+  }),
+
+  genre_id: Joi.number().integer().required().messages({
+    'number.base': 'Genre ID must be a number',
+    'any.required': 'Genre is required'
+  })
+});
+
+const updateBookSchema = Joi.object({
+  title: Joi.string().min(3).optional(),
+  author: Joi.string().min(3).optional(),
+  price: Joi.number().greater(0).optional(),
+  genre_id: Joi.number().integer().optional()
+});
+
+
+module.exports = { createBookSchema };
