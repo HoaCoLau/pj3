@@ -1,6 +1,7 @@
 const e = require('express');
 const Book = require('../models/Book');
 const Genre = require('../models/Genre');
+const User = require('../models/User');
 const { createBookSchema, updateBookSchema } = require('../validation/bookValidation');
 
 
@@ -9,7 +10,7 @@ exports.getAllBooks = async (req, res) => {
   const limit = 10;
   const offset = (page - 1) * limit;
   const genres = await Genre.findAll();
-
+  const users = await User.findAll();
   try {
     const { count, rows: books } = await Book.findAndCountAll({
       limit,
@@ -22,6 +23,7 @@ exports.getAllBooks = async (req, res) => {
     res.render('book/books', {
       books,
       genres,
+      users,
       currentPage: page,
       totalPages,
     });
@@ -48,25 +50,24 @@ exports.createBook = async (req, res) => {
     }
 
     return res.render('book/createBook', {
+      console: error.details,
       genres,
       errorObj,
       oldInput: req.body,
     });
   }
-
-  try {
-    const { title, author, price, genre_id, decription } = req.body;
+    try {
+    const { title, price, genre_id, decription } = req.body;
     const image = req.file ? req.file.filename : null;
-
+    const user_id = res.locals.user.id;
     await Book.create({
       title,
-      author,
       price,
       genre_id,
       image,
+      user_id,
       decription
     });
-
     res.redirect('/books');
   } catch (err) {
     console.error(err);
@@ -78,8 +79,10 @@ exports.createBook = async (req, res) => {
 exports.getBookById = async (req, res) => {
   try {
     const book = await Book.findByPk(req.params.id);
+    const genres = await Genre.findAll();
+    const users = await User.findAll();
     if (book) {
-      res.render('book/bookDetail', { book });
+      res.render('book/bookDetail', { book , genres, users });
     } else {
       res.status(404).send('Book not found');
     }
@@ -123,11 +126,12 @@ exports.updateBook = async (req, res) => {
     });
   }
   try {
-    const { title, author, price, genre_id, decription } = req.body;
+    const { title, price, genre_id, decription } = req.body;
     const book = await Book.findByPk(req.params.id);
     const image = req.file ? req.file.filename : book.image;
+    const user_id = res.locals.user.id;
     if (book) {
-      await book.update({ title, author, price, genre_id, image, decription });
+      await book.update({ title, price, genre_id, image, decription, user_id });
       res.redirect('/books');
     } else {
       res.status(404).send('Book not found');

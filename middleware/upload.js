@@ -18,7 +18,7 @@ const fileFilter = (req, file, cb) => {
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new Error('Chỉ chấp nhận file ảnh!'));
+    cb(new Error('Only image file!'));
   }
 };
 

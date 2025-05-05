@@ -6,6 +6,7 @@ module.exports = (req, res, next) => {
     try {
       const verified = jwt.verify(token, process.env.JWT_SECRET);
       res.locals.user = verified;
+      console.log('User set in res.locals:', verified);
     } catch (err) {
       res.locals.user = null;
     }

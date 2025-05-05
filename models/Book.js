@@ -1,18 +1,25 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const Genre = require('./Genre');
 
 const Book = sequelize.define('Book', {
   title: { type: DataTypes.STRING, allowNull: false },
-  image: { type: DataTypes.STRING, allowNull: false },
-  author: { type: DataTypes.STRING, allowNull: false },
   price: { type: DataTypes.FLOAT, allowNull: false },
-  decription: { type: DataTypes.STRING, allowNull: false },
+  genre_id: { type: DataTypes.INTEGER },
+  image: { type: DataTypes.STRING },
+  decription: { type: DataTypes.TEXT },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
+  }
 }, {
   tableName: 'books',
-  timestamps: false,
+  timestamps: false
 });
-
-Book.belongsTo(Genre, { foreignKey: 'genre_id', as: 'genre' });
 
 module.exports = Book;

@@ -6,12 +6,6 @@ const createBookSchema = Joi.object({
     'string.empty': 'Title is required',
     'string.min': 'Title must be at least 3 characters long'
   }),
-  
-  author: Joi.string().min(3).required().messages({
-    'string.base': 'Author must be a string',
-    'string.empty': 'Author is required',
-    'string.min': 'Author must be at least 3 characters long'
-  }),
 
   price: Joi.number().greater(0).required().messages({
     'number.base': 'Price must be a number',
@@ -35,12 +29,6 @@ const updateBookSchema = Joi.object({
         'string.base': 'Title must be a string',
         'string.empty': 'Title is required',
         'string.min': 'Title must be at least 3 characters long'
-      }),
-      
-      author: Joi.string().min(3).required().messages({
-        'string.base': 'Author must be a string',
-        'string.empty': 'Author is required',
-        'string.min': 'Author must be at least 3 characters long'
       }),
     
       price: Joi.number().greater(0).required().messages({

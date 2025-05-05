@@ -27,15 +27,6 @@
         <% } %>
       </div>
       <div class="mb-3">
-        <label for="author" class="form-label">Author</label>
-        <input type="text" class="form-control <% if (errorObj.author) { %>is-invalid<% } %>" name="author" id="author" value="<%= oldInput?.author || '' %>" />
-        <% if (errorObj.author) { %>
-          <div class="invalid-feedback">
-            <%= errorObj.author %>
-          </div>
-        <% } %>
-      </div>
-      <div class="mb-3">
         <label for="image" class="form-label">Image</label>
         <input type="file" class="form-control" id="image" name="image">
       </div>
